@@ -76,7 +76,7 @@ class HangryBot(object):
             self.slack_client.api_call(
                 "chat.postMessage",
                 channel=channel,
-                text="Not sure what to do")
+                text="Not sure what to do 😋😠")
 
 
 def main():
