@@ -5,6 +5,7 @@ import os
 import time
 import re
 from slackclient import SlackClient
+from menucrawler import CoronaCrawler
 
 
 class HangryBot(object):
@@ -60,11 +61,14 @@ class HangryBot(object):
 
     def handle_command(self, command, channel):
         """Executes bot command if the command is known."""
-        if command == "Lunch?":
+        if command == "Corona?":
+            cc = CoronaCrawler()
+            text = "Corona:\n"
+            text += cc.get_menus()
             self.slack_client.api_call(
-                  "chat.postMessage",
-                  channel="#lunch",
-                  text="Corona Menu is..."
+                "chat.postMessage",
+                channel=channel,
+                text=text
             )
         else:
             # Sends the response back to the channel
