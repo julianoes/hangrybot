@@ -9,7 +9,7 @@ A bot to present lunch infos and start a poll where to go.
 3. Get the `Bot User OAuth Access Token`.
 
 ```
-pip install --user slackclient
+pip3 install --user slackclient
 ```
 
 ## Run the bot
