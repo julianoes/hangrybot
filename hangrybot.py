@@ -6,7 +6,7 @@ import os
 import time
 import re
 from slackclient import SlackClient
-from menucrawler import CoronaCrawler
+from menucrawler import CoronaCrawler, BackmarktCrawler
 
 
 class HangryBot(object):
@@ -66,6 +66,15 @@ class HangryBot(object):
             cc = CoronaCrawler()
             text = "Corona:\n"
             text += cc.get_menus()
+            self.slack_client.api_call(
+                "chat.postMessage",
+                channel=channel,
+                text=text
+            )
+        elif command == "Backmarkt?":
+            bc = BackmarktCrawler()
+            text = "Backmarkt:\n"
+            text += bc.get_menus()
             self.slack_client.api_call(
                 "chat.postMessage",
                 channel=channel,
