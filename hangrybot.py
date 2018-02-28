@@ -5,6 +5,7 @@
 import os
 import time
 import re
+import schedule
 from slackclient import SlackClient
 from menucrawler import CoronaCrawler, BackmarktCrawler
 
@@ -27,12 +28,40 @@ class HangryBot(object):
         self.starterbot_id = \
             self.slack_client.api_call("auth.test")["user_id"]
 
+        schedule.every().day.at("11:30").do(self.daily_message)
+
         while True:
             command, channel = self.parse_bot_commands(
                 self.slack_client.rtm_read())
             if command:
                 self.handle_command(command, channel)
+            schedule.run_pending()
             time.sleep(self.RTM_READ_DELAY)
+
+    def daily_message(self):
+        """Print the menus and create a poll."""
+        cc = CoronaCrawler()
+        text = "Corona:\n"
+        text += cc.get_menus()
+        self.slack_client.api_call(
+            "chat.postMessage",
+            channel="#lunch",
+            text=text
+        )
+        bc = BackmarktCrawler()
+        text = "Backmarkt:\n"
+        text += bc.get_menus()
+        self.slack_client.api_call(
+            "chat.postMessage",
+            channel="#lunch",
+            text=text
+        )
+        text = '/poll "Where do we go?" "Corona" "Backmarkt" "Thai"'
+        self.slack_client.api_call(
+            "chat.postMessage",
+            channel="#lunch",
+            text=text
+        )
 
     def parse_bot_commands(self, slack_events):
         """Parses a list of events from the RTM API to find bot commands.
