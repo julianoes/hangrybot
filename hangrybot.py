@@ -39,7 +39,7 @@ class HangryBot(object):
             schedule.run_pending()
             time.sleep(self.RTM_READ_DELAY)
 
-    def daily_message(self):
+    def daily_message(self, channel="#lunch"):
         """Print the menus and create a poll."""
         cc = CoronaCrawler()
         text = "*Corona:*\n```"
@@ -47,7 +47,7 @@ class HangryBot(object):
         text += "```"
         self.slack_client.api_call(
             "chat.postMessage",
-            channel="#lunch",
+            channel=channel,
             text=text
         )
         bc = BackmarktCrawler()
@@ -56,14 +56,14 @@ class HangryBot(object):
         text += "```"
         self.slack_client.api_call(
             "chat.postMessage",
-            channel="#lunch",
+            channel=channel,
             text=text
         )
         text = '"Where do we go?" "Corona" "Backmarkt" "Thai"'
         command = '/poll'
         self.slack_client.api_call(
             "chat.postMessage",
-            channel="#lunch",
+            channel=channel,
             command=command,
             text=text
         )
@@ -133,7 +133,7 @@ class HangryBot(object):
                 text=text
             )
         elif "test-daily" in command.lower():
-            self.daily_message()
+            self.daily_message(channel)
         else:
             # Sends the response back to the channel
             self.slack_client.api_call(
