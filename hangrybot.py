@@ -132,6 +132,8 @@ class HangryBot(object):
                 channel=channel,
                 text=text
             )
+        elif "test-daily" in command.lower():
+            self.daily_message()
         else:
             # Sends the response back to the channel
             self.slack_client.api_call(
