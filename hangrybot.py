@@ -62,7 +62,7 @@ class HangryBot(object):
         text = '"Where do we go?" "Corona" "Backmarkt" "Thai"'
         command = '/poll'
         self.slack_client.api_call(
-            "chat.postMessage",
+            "chat.command",
             channel=channel,
             command=command,
             text=text
