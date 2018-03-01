@@ -18,6 +18,7 @@ class HangryBot(object):
 
     def __init__(self):
         self.slack_client = SlackClient(os.environ.get('SLACK_BOT_TOKEN'))
+        self.legacy_token = os.environ.get('SLACK_LEGACY_TOKEN')
         self.starterbot_id = None
 
     def run(self):
@@ -63,6 +64,7 @@ class HangryBot(object):
         command = '/poll'
         self.slack_client.api_call(
             "chat.command",
+            token=self.legacy_token,
             channel=channel,
             command=command,
             text=text
