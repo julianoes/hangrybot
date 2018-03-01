@@ -18,6 +18,7 @@ class HangryBot(object):
 
     def __init__(self):
         self.slack_client = SlackClient(os.environ.get('SLACK_BOT_TOKEN'))
+        self.legacy_token = os.environ.get('SLACK_LEGACY_TOKEN')
         self.starterbot_id = None
 
     def run(self):
@@ -39,7 +40,7 @@ class HangryBot(object):
             schedule.run_pending()
             time.sleep(self.RTM_READ_DELAY)
 
-    def daily_message(self):
+    def daily_message(self, channel="#lunch"):
         """Print the menus and create a poll."""
         cc = CoronaCrawler()
         text = "*Corona:*\n```"
@@ -47,7 +48,7 @@ class HangryBot(object):
         text += "```"
         self.slack_client.api_call(
             "chat.postMessage",
-            channel="#lunch",
+            channel=channel,
             text=text
         )
         bc = BackmarktCrawler()
@@ -56,14 +57,15 @@ class HangryBot(object):
         text += "```"
         self.slack_client.api_call(
             "chat.postMessage",
-            channel="#lunch",
+            channel=channel,
             text=text
         )
         text = '"Where do we go?" "Corona" "Backmarkt" "Thai"'
         command = '/poll'
         self.slack_client.api_call(
-            "chat.postMessage",
-            channel="#lunch",
+            "chat.command",
+            token=self.legacy_token,
+            channel=channel,
             command=command,
             text=text
         )
@@ -133,7 +135,7 @@ class HangryBot(object):
                 text=text
             )
         elif "test-daily" in command.lower():
-            self.daily_message()
+            self.daily_message(channel)
         else:
             # Sends the response back to the channel
             self.slack_client.api_call(
