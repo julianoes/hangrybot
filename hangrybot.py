@@ -41,16 +41,18 @@ class HangryBot(object):
     def daily_message(self):
         """Print the menus and create a poll."""
         cc = CoronaCrawler()
-        text = "Corona:\n"
+        text = "*Corona:*\n```"
         text += cc.get_menus()
+        text += "```"
         self.slack_client.api_call(
             "chat.postMessage",
             channel="#lunch",
             text=text
         )
         bc = BackmarktCrawler()
-        text = "Backmarkt:\n"
+        text = "*Backmarkt:*\n```"
         text += bc.get_menus()
+        text += "```"
         self.slack_client.api_call(
             "chat.postMessage",
             channel="#lunch",
@@ -93,8 +95,9 @@ class HangryBot(object):
         """Executes bot command if the command is known."""
         if command == "Corona?":
             cc = CoronaCrawler()
-            text = "Corona:\n"
+            text = "*Corona:*\n```"
             text += cc.get_menus()
+            text += "```"
             self.slack_client.api_call(
                 "chat.postMessage",
                 channel=channel,
@@ -102,8 +105,9 @@ class HangryBot(object):
             )
         elif command == "Backmarkt?":
             bc = BackmarktCrawler()
-            text = "Backmarkt:\n"
+            text = "*Backmarkt:*\n```"
             text += bc.get_menus()
+            text += "```"
             self.slack_client.api_call(
                 "chat.postMessage",
                 channel=channel,
