@@ -6,6 +6,7 @@ import os
 import time
 import re
 import schedule
+from random import randint
 from slackclient import SlackClient
 from menucrawler import CoronaCrawler, BackmarktCrawler
 
@@ -108,6 +109,22 @@ class HangryBot(object):
             text = "*Backmarkt:*\n```"
             text += bc.get_menus()
             text += "```"
+            self.slack_client.api_call(
+                "chat.postMessage",
+                channel=channel,
+                text=text
+            )
+        elif "where" in command or "Where" in command:
+            random_number = randint(0, 3)
+            if random_number == 0:
+                text = "You seem hungry. Let's have some thai food!"
+            elif random_number == 1:
+                text = "You can't go wrong with Pizza. Let's go to Corona!"
+            elif random_number == 2:
+                text = "Backmarkt it is!"
+            else:
+                text = "You have things to do! Just grab a swandwich."
+
             self.slack_client.api_call(
                 "chat.postMessage",
                 channel=channel,
