@@ -118,7 +118,7 @@ class HangryBot(object):
                 channel=channel,
                 text=text
             )
-        elif "where" in command or "Where" in command:
+        elif "where" in command.lower():
             random_number = randint(0, 3)
             if random_number == 0:
                 text = "You seem hungry. Let's have some thai food!"
