@@ -118,16 +118,16 @@ class HangryBot(object):
                 channel=channel,
                 text=text
             )
-        elif "where" in command or "Where" in command:
+        elif "where" in command.lower():
             random_number = randint(0, 3)
             if random_number == 0:
-                text = "You seem hungry. Let's have some thai food!"
+                text = "You seem hungry. Let's have some Thai food!"
             elif random_number == 1:
                 text = "You can't go wrong with Pizza. Let's go to Corona!"
             elif random_number == 2:
                 text = "Backmarkt it is!"
             else:
-                text = "You have things to do! Just grab a swandwich."
+                text = "You have things to do! Just grab a sandwich."
 
             self.slack_client.api_call(
                 "chat.postMessage",
