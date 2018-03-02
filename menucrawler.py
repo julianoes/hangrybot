@@ -66,8 +66,9 @@ class BackmarktCrawler(MenuCrawler):
         our_day_active = False
         soup = BeautifulSoup(request.text, 'html.parser')
         for h2 in soup.select('div#contentBlock-1 div h2'):
-            title_without_year = str.join(" ", h2.text.split(" ")[0:-1])
-            if str(day_of_month) in title_without_year \
+            day_in_german, date_in_german = h2.text.split(",")
+            day_of_month_parsed, _ = date_in_german.split(".")
+            if day_of_month == int(day_of_month_parsed) \
                     and str(year) in h2.text:
                 our_day_active = True
             elif our_day_active and str(year) in h2.text:
@@ -75,10 +76,10 @@ class BackmarktCrawler(MenuCrawler):
 
             if our_day_active:
                 for div in h2.parent.next_sibling.select('div div p'):
-                    if u"menü " in div.text:
+                    if u"menü " in div.text or u"menu" in div.text:
                         self.menus.append(Menu(div.text))
                         continue
-                    if u"Menüsalat" in div.text:
+                    if u"Menüsalat" in div.text or u"Menusalat" in div.text:
                         continue
                     # Don't add empty lines.
                     if self.menus and div.text.strip():
