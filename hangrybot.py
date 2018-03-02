@@ -78,10 +78,49 @@ class HangryBot(object):
             command=command,
             text=text
         )
+        text = self.gorgonzola()
+        if text:
+            self.slack_client.api_call(
+                "chat.postMessage",
+                channel=channel,
+                text=text
+            )
 
     def remind_to_go(self, channel="#lunch"):
         """Send out a reminder to go."""
         text = "*Let's go!* 😋😠\n"
+        self.slack_client.api_call(
+            "chat.postMessage",
+            channel=channel,
+            text=text
+        )
+
+    def gorgonzola(self):
+        """Check for Gorgonzola in menus and return advice or None"""
+        # get daily menus
+        bc = BackmarktCrawler()
+        menu_bc = bc.get_menus()
+        cc = CoronaCrawler()
+        menu_cc = cc.get_menus()
+
+        # search for gorgonzola
+        text = ''
+        if "gorgonzola" in menu_bc.lower() and "gorgonzola" in menu_cc.lower():
+            text = 'It has to be either Corona or Backmarkt!🤩'
+
+        elif "gorgonzola" in menu_cc.lower():
+            text = 'I think @darioxz wants to go to Corona...🤢'
+
+        elif "gorgonzola" in menu_bc.lower():
+            text = 'Apparently, @darioxz wants to go to Backmarkt...😒'
+
+        return text
+
+    def dario(self, channel):
+        """Sends what Dario would say about the menu"""
+        text = self.gorgonzola()
+        if not text:
+            text = "I don't know, there is no Gorgonzola...😭"
         self.slack_client.api_call(
             "chat.postMessage",
             channel=channel,
@@ -154,6 +193,8 @@ class HangryBot(object):
             )
         elif "test-daily" in command.lower():
             self.daily_message(channel)
+        elif "dario" in command.lower() or "darioxz" in command.lower():
+            self.dario(channel)
         else:
             # Sends the response back to the channel
             self.slack_client.api_call(
