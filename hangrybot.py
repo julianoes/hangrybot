@@ -31,6 +31,7 @@ class HangryBot(object):
             self.slack_client.api_call("auth.test")["user_id"]
 
         schedule.every().day.at("11:30").do(self.daily_message)
+        schedule.every().day.at("11:45").do(self.remind_to_go)
 
         while True:
             command, channel = self.parse_bot_commands(
@@ -67,6 +68,15 @@ class HangryBot(object):
             token=self.legacy_token,
             channel=channel,
             command=command,
+            text=text
+        )
+
+    def remind_to_go(self, channel="#lunch"):
+        """Send out a reminder to go."""
+        text = "*Let's go!* 😋😠\n```"
+        self.slack_client.api_call(
+            "chat.postMessage",
+            channel=channel,
             text=text
         )
 
