@@ -30,8 +30,8 @@ class HangryBot(object):
         self.starterbot_id = \
             self.slack_client.api_call("auth.test")["user_id"]
 
-        schedule.every().day.at("11:30").do(self.daily_message)
-        schedule.every().day.at("11:45").do(self.remind_to_go)
+        self._schedule_workdays("11:30", self.daily_message)
+        self._schedule_workdays("11:45", self.remind_to_go)
 
         while True:
             command, channel = self.parse_bot_commands(
@@ -40,6 +40,14 @@ class HangryBot(object):
                 self.handle_command(command, channel)
             schedule.run_pending()
             time.sleep(self.RTM_READ_DELAY)
+
+    def _schedule_workdays(self, time, function):
+        """Schedule something Monday to Friday."""
+        schedule.every().monday.at(time).do(function)
+        schedule.every().tuesday.at(time).do(function)
+        schedule.every().wednesday.at(time).do(function)
+        schedule.every().thursday.at(time).do(function)
+        schedule.every().friday.at(time).do(function)
 
     def daily_message(self, channel="#lunch"):
         """Print the menus and create a poll."""
