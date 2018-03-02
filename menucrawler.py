@@ -76,10 +76,10 @@ class BackmarktCrawler(MenuCrawler):
 
             if our_day_active:
                 for div in h2.parent.next_sibling.select('div div p'):
-                    if u"menü " in div.text:
+                    if u"menü " in div.text or u"menu" in div.text:
                         self.menus.append(Menu(div.text))
                         continue
-                    if u"Menüsalat" in div.text:
+                    if u"Menüsalat" in div.text or u"Menusalat" in div.text:
                         continue
                     # Don't add empty lines.
                     if self.menus and div.text.strip():
