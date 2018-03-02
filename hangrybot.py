@@ -73,7 +73,7 @@ class HangryBot(object):
 
     def remind_to_go(self, channel="#lunch"):
         """Send out a reminder to go."""
-        text = "*Let's go!* 😋😠\n```"
+        text = "*Let's go!* 😋😠\n"
         self.slack_client.api_call(
             "chat.postMessage",
             channel=channel,
