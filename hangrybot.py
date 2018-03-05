@@ -205,7 +205,14 @@ class HangryBot(object):
 
 def main():
     bot = HangryBot()
-    bot.run()
+
+    # Automatic restart if something bad happens.
+    while True:
+        try:
+            bot.run()
+        except Exception as e:
+            print("Got exception: " + e)
+            print("Restarting")
 
 
 if __name__ == '__main__':
