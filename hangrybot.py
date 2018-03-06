@@ -175,6 +175,8 @@ class HangryBot(object):
                 channel=channel,
                 text=text
             )
+        elif "dario" in command.lower() or "darioxz" in command.lower():
+            self.dario(channel)
         elif "where" in command.lower():
             random_number = randint(0, 3)
             if random_number == 0:
@@ -193,8 +195,6 @@ class HangryBot(object):
             )
         elif "test-daily" in command.lower():
             self.daily_message(channel)
-        elif "dario" in command.lower() or "darioxz" in command.lower():
-            self.dario(channel)
         else:
             # Sends the response back to the channel
             self.slack_client.api_call(
