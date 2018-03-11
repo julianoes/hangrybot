@@ -82,6 +82,7 @@ class HangryBot(object):
         if text:
             self.slack_client.api_call(
                 "chat.postMessage",
+                link_names=1,
                 channel=channel,
                 text=text
             )
@@ -123,6 +124,7 @@ class HangryBot(object):
             text = "I don't know, there is no Gorgonzola...😭"
         self.slack_client.api_call(
             "chat.postMessage",
+            link_names=1,
             channel=channel,
             text=text
         )
