@@ -211,7 +211,7 @@ def main():
         try:
             bot.run()
         except Exception as e:
-            print("Got exception: " + e)
+            print("Got exception: " + repr(e))
             print("Restarting")
 
 
