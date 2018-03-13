@@ -18,3 +18,15 @@ pip3 install --user slackclient beautifulsoup4 schedule
 export SLACK_BOT_TOKEN=xoxb-...
 ./hangrybot.py
 ```
+
+## Run the bot on Heroku
+
+1. Register a (free) Heroku account.
+2. Add a Heroku app.
+3. Connect to github.
+4. Enable auto-deploy from master.
+5. Add the Slack token in 'Settings -> Config Variables'.
+6. Add the heroku/python buildpack.
+7. Don't forget to start the dyno in 'Overwiew -> Configure Dynos' and there set the worker to `ON`.
+
+Note that Heroku makes use of [requirements.txt](requirements.txt) and [Procfile](Procfile).
