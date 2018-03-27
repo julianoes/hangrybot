@@ -205,16 +205,41 @@ class HangryBot(object):
                 text="Not sure what to do 😋😠")
 
 
+class Limiter(object):
+    def __init__(self):
+        self._count = 0
+
+    def count(self):
+        self._count += 1
+
+    def reset(self):
+        self._count = 0
+
+    def ok(self):
+        return self._count < 3
+
+
 def main():
     bot = HangryBot()
+
+    # Rate limit restarts per day
+    limiter = Limiter()
+
+    schedule.every().day.at("0:05").do(limiter.reset)
 
     # Automatic restart if something bad happens.
     while True:
         try:
-            bot.run()
+            if limiter.ok():
+                bot.run()
+            else:
+                time.sleep(1)
+
         except Exception as e:
             print("Got exception: " + repr(e))
-            print("Restarting")
+            print("Restarting in 1 minute...")
+            time.sleep(60)
+            limiter.count()
 
 
 if __name__ == '__main__':
