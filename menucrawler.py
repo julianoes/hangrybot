@@ -37,17 +37,17 @@ class CoronaCrawler(MenuCrawler):
         soup = BeautifulSoup(request.text, 'html.parser')
         # The menu is inside two divs with class row, that's fairly easy
         # to read.
-        for p in soup.select('div.row div.row p'):
-            line = p.text
-            if line == "":
-                continue
-            if u"Menü " in line or "Tagespizza" in line:
-                self.menus.append(Menu(line))
-                continue
-            if "CHF" in line or "Suppe oder Salat" in line:
-                continue
-            if self.menus:
-                self.menus[-1].text += line + "\n"
+        for p in soup.select('div.page-content p'):
+            for line in p.text.split('\n'):
+                if line == "":
+                    continue
+                if u"Menü " in line or "Tagespizza" in line:
+                    self.menus.append(Menu(line))
+                    continue
+                if "CHF" in line:
+                    continue
+                if self.menus:
+                    self.menus[-1].text += line + "\n"
 
 
 class BackmarktCrawler(MenuCrawler):
@@ -75,15 +75,16 @@ class BackmarktCrawler(MenuCrawler):
                 our_day_active = False
 
             if our_day_active:
-                for div in h2.parent.next_sibling.select('div div p'):
-                    if u"menü " in div.text or u"menu" in div.text:
-                        self.menus.append(Menu(div.text))
-                        continue
-                    if u"Menüsalat" in div.text or u"Menusalat" in div.text:
-                        continue
-                    # Don't add empty lines.
-                    if self.menus and div.text.strip():
-                        self.menus[-1].text += div.text + "\n"
+                for p in h2.parent.next_sibling.select('div div p'):
+                    for line in p.text.split('\n'):
+                        if u"menü " in line.lower() or u"menu" in line.lower():
+                            self.menus.append(Menu(line))
+                            continue
+                        if u"Menüsalat" in line or u"Menusalat" in line:
+                            continue
+                        # Don't add empty lines.
+                        if self.menus and line.strip():
+                            self.menus[-1].text += line + "\n"
 
 
 def main():
