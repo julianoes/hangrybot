@@ -37,17 +37,17 @@ class CoronaCrawler(MenuCrawler):
         soup = BeautifulSoup(request.text, 'html.parser')
         # The menu is inside two divs with class row, that's fairly easy
         # to read.
-        for p in soup.select('div.row div.row p'):
-            line = p.text
-            if line == "":
-                continue
-            if u"Menü " in line or "Tagespizza" in line:
-                self.menus.append(Menu(line))
-                continue
-            if "CHF" in line or "Suppe oder Salat" in line:
-                continue
-            if self.menus:
-                self.menus[-1].text += line + "\n"
+        for p in soup.select('div.page-content p'):
+            for line in p.text.split('\n'):
+                if line == "":
+                    continue
+                if u"Menü " in line or "Tagespizza" in line:
+                    self.menus.append(Menu(line))
+                    continue
+                if "CHF" in line:
+                    continue
+                if self.menus:
+                    self.menus[-1].text += line + "\n"
 
 
 class BackmarktCrawler(MenuCrawler):
